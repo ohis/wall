@@ -1,0 +1,59 @@
+<div ng-init="UC.session()">
+  <h1>Full MEAN Wall</h1>
+  <a class="header_item float_right inline_block" href="#" ng-click="UC.logout()">Sign Out</a>
+  <h1>Welcome  {{ UC.current_user.name }}</h1>
+
+  <div class="messages" ng-controller="MessageController as MC">
+		<form ng-submit="MC.create(MC.newMessage)">
+			<div>
+				<label>Post a message:</label>
+			</div>
+			<div>
+				<textarea ng-model="MC.newMessage.message"></textarea>
+			</div>
+			<div>
+				<input type="submit" value="Post Message">
+			</div>
+		</form>
+		<div>
+			<p class="error" ng-repeat="error in MC.messages_errors">{{ error }}</p>
+		</div>
+
+    <div ng-init="MC.index()">
+
+      <div ng-repeat="message in MC.messages" ng-init="index = $index">
+        <div class="">
+
+        {{message.user.name}}  {{message.createdAt}}
+
+         <p>Message:{{message.message}}<a href="" ng-if="UC.current_user._id == message.user._id" ng-click="MC.destroy(message._id)">Delete</a></p
+          {{index}}
+        </div>
+
+        <div ng-repeat="comment in message.comments">
+          <a href="" ng-if="UC.current_user._id == comment.user._id" ng-click="MC.destroyComment(comment._id)">Delete</a>
+        <h4>{{comment.user.name}} - {{comment.createdAt}}</h4>
+        <p class="inline_block">Likes: {{ comment.likes.count }}</p>
+				<button ng-if="comment.likes.users.indexOf(UC.current_user._id) == -1" ng-click="MC.updateCommentLikes(comment._id, UC.current_user._id)">Like</button>
+           <p>{{comment.comment}}</p>
+        </div>
+
+        <div>
+          <h4>Post a Comment</h4>
+          <form  ng-submit="MC.createComment(MC.newComment,index,message._id)">
+            <div>
+              <textarea ng-model="MC.newComment[index].comment"></textarea>
+            </div>
+            <div>
+              <input type="submit" value="Post a comment">
+            </div>
+          </form>
+        </div>
+
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
